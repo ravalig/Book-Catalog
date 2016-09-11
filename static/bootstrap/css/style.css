@@ -1,0 +1,101 @@
+body {
+    font-family: 'Muli', sans-serif;
+    font-size: 15px;
+    margin: 0 auto;
+    background-color: #dbdedb;
+    /*color: #333;*/
+}
+
+tr:hover td a{
+    color: #7a263c;
+}
+
+tr:hover td .genre-table{
+    background-color: #dbdedb;  /*Grey color*/
+}
+
+.main-title:hover {
+    color: #dbdedb;
+    text-decoration: none;
+}
+
+.error {
+    color:red;
+}
+
+.genres {
+    display: flex;
+    flex-direction: column;
+}
+
+.book-images {
+    margin-top: 45px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.titles {
+    color: #7a263c;     /*Red color*/
+}
+
+.main-title-container {
+    font-family: 'Muli', sans-serif;
+    background-color: #7a263c;  /*Red color*/
+    height: 150px;
+    margin-top: 20px;
+    color: #dbdedb;     /*Grey color*/
+}
+
+.main-title {
+    margin-top: 35px;
+    color: #dbdedb;
+}
+
+.genres-sub-title {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.genre-table {
+    padding:2px;
+    line-height: 60px;
+    vertical-align: top;
+    border-top: 1px;
+    background-color: #7f8586;
+}
+
+.font {
+    color: #dbdedb; /*Grey color*/
+}
+
+.text-font {
+    color: black;
+}
+
+.form {
+    color: #dbdedb; /*Red color*/
+    border-spacing: 15px;
+    border-collapse: separate;
+    margin: auto;
+    font-size: 17px;
+    background-color: #7f8586
+}
+
+.form-buttons {
+    background-color: #7a263c;  /*Red color*/
+    color: #dbdedb; /*Grey color*/
+    font-size: 16px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+
+.login,
+.logout {
+    margin-top: 60px;
+    color: #7a263c;  /*Red color*/
+    background-color: #dbdedb; /*Grey color*/
+    font-size: 16px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}

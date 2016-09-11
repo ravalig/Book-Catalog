@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12 titles text-center">
+        <h1> Delete Genre </h1>
+    </div>
+</div>
+
+<div class="row text-center">
+
+        <div class="col-md-12 font ">
+            <form action="{{url_for('deleteGenre', genre_id = genre.id)}}" method = 'POST'>
+                <h3 class="error">Are you sure you want to delete {{genre.name}}?</h3>
+                <input class="form-buttons text-center" type='submit' value='Delete'>
+            </form>
+
+            <form class="text-center">
+                <button class="form-buttons" formaction="{{url_for('bookGenres')}}">Cancel</button>
+            </form>
+        </div>
+</div>
+
+{% endblock %}

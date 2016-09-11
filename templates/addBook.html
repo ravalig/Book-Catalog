@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 titles text-center">
+        <h1> New Book </h1>
+    </div>
+</div>
+
+<div class="row text-center">
+
+        <div class="col-md-4">
+
+        </div>
+
+        <div class="col-md-4 font form">
+
+            <form action="{{url_for('addBook', genre_id = genre_id)}}" method = 'POST' enctype=multipart/form-data>
+                <table class="form">
+                    <tr>
+                        <td>
+                            Book Name
+                        </td>
+                        <td>
+                            <input class="text-font" type='text' name='name'>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Description
+                        </td>
+                        <td>
+                            <input class="text-font" type='text' name='description'>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Price
+                        </td>
+                        <td>
+                            <input class="text-font" type='text' name='price'>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Picture
+                        </td>
+                        <td>
+                            <input class="text-font" type='file' name='picture'>
+                        </td>
+                    </tr>
+
+                </table>
+                <input class="form-buttons text-center" type='submit' value='Add'>
+            </form>
+
+            <form class="text-center">
+                <button class="form-buttons" formaction="{{url_for('displayBooks', genre_id = genre_id)}}">Cancel</button>
+            </form>
+        </div>
+</div>
+
+{% endblock %}

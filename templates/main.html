@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <h4><a class="titles" href="{{url_for('newGenre')}}">Add New Genre</a></h4>
+    </div>
+</div>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+
+<ul>
+{% for message in messages %}
+  <li><strong>{{message}}</strong></li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+{% if not error %}
+
+    <div class="row">
+        <div class="col-md-6 titles genres-sub-title">
+            <h3>Genres</h3>
+        </div>
+
+        <div class="col-md-6 text-center titles sub-title">
+            <h2>Recently Added Books</h2>
+        </div>
+    </div>
+
+<div class="row ">
+            <div class="col-md-5">
+    {% for genre in genres %}
+                <table class="table-hover genre-table">
+                    <tr class="change-color">
+                        <td class="col-md-3 text-capitalize">
+                            <a class="font" href="{{url_for('displayBooks', genre_id = genre.id)}}">{{genre.name}}</a>
+                        </td>
+                        <td class=" col-md-2 text-left">
+                            <a class="font" href="{{url_for('editGenre', genre_id = genre.id)}}">Edit</a> &nbsp;
+                            <a class="font" href="{{url_for('deleteGenre', genre_id = genre.id)}}">Delete</a>
+                        </td>
+                    </tr>
+                </table>
+    {% endfor %}
+            </div>
+
+
+            <div class="col-md-7">
+                <div class="row book-images">
+                    <div class="col-md-2">
+                        <img src="http://placekitten.com/150/200">
+                    </div>
+
+                    <div class="col-md-2">
+                        <img src="http://placekitten.com/150/200">
+                    </div>
+
+                    <div class="col-md-2">
+                        <img src="http://placekitten.com/150/200">
+                    </div>
+                </div>
+
+                <div class="row book-images">
+                    <div class="col-md-2">
+                        <img src="http://placekitten.com/150/200">
+                    </div>
+
+                    <div class="col-md-2">
+                        <img src="http://placekitten.com/150/200">
+                    </div>
+
+                    <div class="col-md-2">
+                        <img src="http://placekitten.com/150/200">
+                    </div>
+                </div>
+
+                <div class="row book-images">
+                    <div class="col-md-2 text-center">
+                        <img src="http://placekitten.com/150/200">
+                    </div>
+
+                    <div class="col-md-2">
+                        <img src="http://placekitten.com/150/200">
+                    </div>
+
+                    <div class="col-md-2">
+                        <img src="http://placekitten.com/150/200">
+                    </div>
+                </div>
+            </div>
+
+
+</div>
+
+{% else %}
+    {{error}}
+
+{% endif %}
+
+{% endblock %}

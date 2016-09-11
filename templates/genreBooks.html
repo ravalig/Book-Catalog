@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12 titles text-center">
+        <h1 class="text-capitalize">{{genre.name}}</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h4><a class="titles" href="{{url_for('addBook', genre_id = genre.id)}}">Add New Book</a></h4>
+    </div>
+</div>
+
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+
+<ul>
+    {% for message in messages %}
+        <li><strong>{{message}}</strong></li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+
+{% if not error %}
+
+    {% for book in books %}
+        <div class="row text-capitalize">
+            <div class="col-md-12">
+                {{book['name']}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                {{book['description']}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                {{book['price']}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <img src="/static/images/{{book['picture']}}">
+            </div>
+        </div>
+
+        <form>
+                <button class="form-buttons" formaction="{{url_for('editBook', book_id = book.id, genre_id = genre.id)}}">Edit</button>
+                <button class="form-buttons" formaction="{{url_for('deleteBook', book_id = book.id, genre_id = genre.id)}}">Delete</button>
+        </form>
+    {% endfor %}
+
+{% else %}
+    <div class="row error">
+        <div class="col-md-12">
+            {{error}}
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}

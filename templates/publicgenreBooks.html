@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+<div class="row">
+    <div class="col-md-12 titles text-center">
+        <h1 class="text-capitalize">{{genre.name}}</h1>
+    </div>
+</div>
+
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+
+<ul>
+    {% for message in messages %}
+        <li><strong>{{message}}</strong></li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+
+{% if not error %}
+
+    {% for book in books %}
+        <div class="row">
+            <div class="col-md-12">
+                {{book['name']}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                {{book['description']}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                {{book['price']}}
+            </div>
+        </div>
+
+    {% endfor %}
+
+{% else %}
+    <div class="row error">
+        <div class="col-md-12">
+            {{error}}
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}

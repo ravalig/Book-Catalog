@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 titles text-center">
+        <h1> New Genre </h1>
+    </div>
+</div>
+
+<div class="row text-center">
+
+        <div class="col-md-4">
+
+        </div>
+
+        <div class="col-md-4 font form">
+            <form action="{{url_for('newGenre')}}" method = 'POST'>
+                <table class="form">
+                    <tr>
+                        <td>
+                            Genre Name
+                        </td>
+                        <td>
+                            <input class="text-font" type='text' name='name'>
+                        </td>
+                    </tr>
+                </table>
+
+                <input class="form-buttons text-center" type='submit' value='Create'>
+            </form>
+
+            <form class="text-center">
+                <button class="form-buttons" formaction="{{url_for('bookGenres')}}">Cancel</button>
+            </form>
+        </div>
+</div>
+
+{% endblock %}
