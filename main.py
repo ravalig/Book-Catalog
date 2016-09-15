@@ -44,11 +44,18 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 def allowed_file(filename):
+    """
+    Method to check for allowed format images to upload
+    """
     return '.' in filename and \
         filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
 def createUser(login_session):
+    """
+    Method to create a new user in to the database.
+    If successful returns the user id of the user.
+    """
     newUser = User(name=login_session['username'], email=login_session[
                    'email'], picture=login_session['picture'])
     session.add(newUser)
@@ -58,11 +65,17 @@ def createUser(login_session):
 
 
 def getUserInfo(user_id):
+    """
+    Method returns the specific user object given the user id
+    """
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
 
 def getUserID(email):
+    """
+    Method returns the user id of an user given the email id.
+    """
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
@@ -72,6 +85,9 @@ def getUserID(email):
 
 @app.route('/login')
 def showLogin():
+    """
+    This method shows the login page for the application
+    """
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
         for x in xrange(32))
     login_session['state'] = state
@@ -79,6 +95,9 @@ def showLogin():
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    """
+    This method connects to the google signin page using OAuth
+    """
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -174,12 +193,14 @@ def gconnect():
 
 @app.route('/gdisconnect')
 def gdisconnect():
-    print login_session.keys()
+    """
+    This method logouts of the Google Signin
+    """
     access_token = login_session.get('access_token')
-    print login_session.keys()
-    print 'In gdisconnect access token is %s', access_token
-    print 'User name is: '
-    print login_session.get('username')
+    # print login_session.keys()
+    # print 'In gdisconnect access token is %s', access_token
+    # print 'User name is: '
+    # print login_session.get('username')
     if access_token is None:
         print 'Access Token is None'
         response = make_response(json.dumps('Current user not connected.'),401)
@@ -188,8 +209,8 @@ def gdisconnect():
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']        #NOQA
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-    print 'result is '
-    print result
+    # print 'result is '
+    # print result
     if result['status'] == '200':
         del login_session['access_token']
         del login_session['gplus_id']
@@ -211,27 +232,47 @@ def gdisconnect():
 
 @app.route('/genres/JSON')
 def bookGenresJSON():
+    """
+    This method serves as the JSON endpoint for the all genres in the
+    book catlaog
+    """
     genres = session.query(Genre).order_by(Genre.name).all()
     return jsonify(Genres=[i.serialize for i in genres])
 
 @app.route('/genre/books/<int:genre_id>/JSON')
 def displayBooksJSON(genre_id):
+    """
+    This method serves as the JSON endpoint for all books in a
+    specific genre.
+    """
     books = session.query(Book).filter_by(genre_id = genre_id).all()
     return jsonify(Books=[i.serialize for i in books])
 
 @app.route('/book/<int:genre_id>/<int:book_id>/JSON')
 def BookJSON(genre_id, book_id):
+    """
+    This method serves as JSON endpoint for a specific book in a specific genre
+    """
     book = session.query(Book).filter_by(genre_id=genre_id, id = book_id).one()
     return jsonify(Book=[book.serialize])
 
 @app.route('/')
 @app.route('/genres')
 def bookGenres():
+    """
+    This method displays the main page of the Book Catalog Application.
+    Main page displays all the genres in the app
+    It also displays recently added 9 books into the application
+    """
     genres = session.query(Genre).order_by(Genre.name).all()
     recent_books = session.query(Book).order_by(desc(Book.added_on)).all()
     error =''
+
+    # Checks if any genres are available or not.
     if not genres:
         error = "There are no genres available currently!!"
+
+    # Checks if user is logged in or not
     if 'username' not in login_session:
         return render_template('publicmain.html',genres = genres,
                                                  recent_books = recent_books,
@@ -246,6 +287,10 @@ def bookGenres():
 
 @app.route('/genre/new', methods =['GET','POST'])
 def newGenre():
+    """
+    This method adds new genres into the application by
+    valid logged in user.
+    """
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
     else:
@@ -261,6 +306,11 @@ def newGenre():
 
 @app.route('/genre/<int:genre_id>/edit', methods =['GET','POST'])
 def editGenre(genre_id):
+    """
+    This method edits the details of a selected genre.
+    Only those who has created that genre can edit the genre
+    details.
+    """
     genre = session.query(Genre).filter_by(id = genre_id).one()
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
@@ -281,6 +331,9 @@ def editGenre(genre_id):
 
 @app.route('/genre/<int:genre_id>/delete', methods =['GET','POST'])
 def deleteGenre(genre_id):
+    """
+    This method deletes the selected genre.
+    """
     genre = session.query(Genre).filter_by(id = genre_id).one()
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
@@ -299,6 +352,9 @@ def deleteGenre(genre_id):
 
 @app.route('/genre/books/<int:genre_id>')
 def displayBooks(genre_id):
+    """
+    This method displays books in a selected genre.
+    """
     books = session.query(Book).filter_by(genre_id = genre_id).all()
     genre = session.query(Genre).filter_by(id = genre_id).one()
     error = ''
@@ -318,6 +374,10 @@ def displayBooks(genre_id):
 
 @app.route('/book/<int:genre_id>/<int:book_id>')
 def oneBook(book_id, genre_id):
+    """
+    This method displays details of a specific book selected from
+    the catalog.
+    """
     book = session.query(Book).filter_by(id = book_id).one()
     error =''
     if not book:
@@ -336,6 +396,11 @@ def oneBook(book_id, genre_id):
 
 @app.route('/genre/books/<int:genre_id>/add', methods =['GET','POST'])
 def addBook(genre_id):
+    """
+    This method adds a new book to the catalog.
+    It takes given image and resize it to thumbanil size
+    and saves it in the given folder.
+    """
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
     else:
@@ -349,7 +414,6 @@ def addBook(genre_id):
                 file = request.files['picture']
                 if file and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
-
                     with Image.open(file) as image:
                         image = resizeimage.resize_contain(image, [100, 150])
 
@@ -366,6 +430,10 @@ def addBook(genre_id):
 
 @app.route('/book/<int:genre_id>/<int:book_id>/edit', methods =['GET','POST'])
 def editBook(genre_id, book_id):
+    """
+    This method handles the editing of selected book.
+    Only owner of the book would be able to edit the book.
+    """
     book = session.query(Book).filter_by(id = book_id).one()
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
@@ -389,6 +457,10 @@ def editBook(genre_id, book_id):
 
 @app.route('/book/<int:genre_id>/<int:book_id>/delete',methods =['GET','POST'])
 def deleteBook(genre_id, book_id):
+        """
+    This method handles the deleting of selected book.
+    Only owner of the book would be able to delete the book.
+    """
     book = session.query(Book).filter_by(id = book_id).one()
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
