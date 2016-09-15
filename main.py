@@ -1,8 +1,9 @@
 
 
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
+from flask import Flask, render_template, request
+from flask import redirect, url_for, jsonify, flash
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Genre, Book, User
 
@@ -18,7 +19,11 @@ from flask import make_response
 import requests
 
 import os
+import subprocess
 from werkzeug import secure_filename
+
+from PIL import Image
+from resizeimage import resizeimage
 
 UPLOAD_FOLDER = 'static/images'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
@@ -32,7 +37,7 @@ CLIENT_ID = json.loads(
 APPLICATION_NAME = "Book Catalog Application"
 
 
-engine = create_engine('sqlite:///bookscatalogtest1.db')
+engine = create_engine('sqlite:///bookscatalogtest2.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -67,7 +72,8 @@ def getUserID(email):
 
 @app.route('/login')
 def showLogin():
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits)for x in xrange(32))
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+        for x in xrange(32))
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
@@ -123,8 +129,8 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(json.dumps
+            ('Current user is already connected.'),200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -156,7 +162,9 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += """ " style = "width: 300px; height: 300px;
+    border-radius: 150px;-webkit-border-radius: 150px;
+    -moz-border-radius: 150px;"> """
     flash("You are now logged in as %s" % login_session.get('username'))
     print "done!"
     return output
@@ -174,10 +182,10 @@ def gdisconnect():
     print login_session.get('username')
     if access_token is None:
         print 'Access Token is None'
-        response = make_response(json.dumps('Current user not connected.'), 401)
+        response = make_response(json.dumps('Current user not connected.'),401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']        #NOQA
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     print 'result is '
@@ -193,7 +201,8 @@ def gdisconnect():
         return redirect(url_for('bookGenres'))
     else:
 
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(json.dumps
+            ('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -210,22 +219,29 @@ def displayBooksJSON(genre_id):
     books = session.query(Book).filter_by(genre_id = genre_id).all()
     return jsonify(Books=[i.serialize for i in books])
 
-@app.route('/genre/books/<int:genre_id>/<int:book_id>/JSON')
+@app.route('/book/<int:genre_id>/<int:book_id>/JSON')
 def BookJSON(genre_id, book_id):
-    book = session.query(Book).filter_by(genre_id = genre_id, id = book_id).one()
+    book = session.query(Book).filter_by(genre_id=genre_id, id = book_id).one()
     return jsonify(Book=[book.serialize])
 
 @app.route('/')
 @app.route('/genres')
 def bookGenres():
     genres = session.query(Genre).order_by(Genre.name).all()
+    recent_books = session.query(Book).order_by(desc(Book.added_on)).all()
     error =''
     if not genres:
         error = "There are no genres available currently!!"
     if 'username' not in login_session:
-        return render_template('publicmain.html', genres = genres, error = error, login_session = login_session)
+        return render_template('publicmain.html',genres = genres,
+                                                 recent_books = recent_books,
+                                                 error = error,
+                                                 login_session = login_session)
     else:
-        return render_template('main.html', genres = genres, error = error, login_session = login_session)
+        return render_template('main.html', genres = genres,
+                                            recent_books = recent_books,
+                                            error = error,
+                                            login_session = login_session)
 
 
 @app.route('/genre/new', methods =['GET','POST'])
@@ -234,13 +250,14 @@ def newGenre():
         return redirect(url_for('showLogin'))
     else:
         if request.method == 'POST':
-            newgenre = Genre(name = request.form['name'], user_id=login_session.get('user_id'))
+            newgenre = Genre(name = request.form['name'],
+                user_id=login_session.get('user_id'))
             session.add(newgenre)
             session.commit()
             flash("New Genre added successfully!!")
             return redirect(url_for('bookGenres'))
         else:
-            return render_template('addGenre.html', login_session = login_session)
+            return render_template('addGenre.html',login_session=login_session)
 
 @app.route('/genre/<int:genre_id>/edit', methods =['GET','POST'])
 def editGenre(genre_id):
@@ -248,6 +265,9 @@ def editGenre(genre_id):
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
     else:
+        if genre.user_id != login_session.get('user_id'):
+            flash("You dont have permissions to update this genre!!")
+            return redirect(url_for('bookGenres'))
         if request.method == 'POST':
             if request.form['name']:
                 genre.name = request.form['name']
@@ -256,7 +276,8 @@ def editGenre(genre_id):
                 flash("Genre updated successfully!!")
                 return redirect(url_for('bookGenres'))
         else:
-            return render_template('editGenre.html', genre = genre, login_session = login_session)
+            return render_template('editGenre.html', genre = genre,
+                                                 login_session = login_session)
 
 @app.route('/genre/<int:genre_id>/delete', methods =['GET','POST'])
 def deleteGenre(genre_id):
@@ -264,13 +285,17 @@ def deleteGenre(genre_id):
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
     else:
+        if genre.user_id != login_session.get('user_id'):
+            flash("You dont have permissions to delete this genre!!")
+            return redirect(url_for('bookGenres'))
         if request.method == 'POST':
             session.delete(genre)
             session.commit()
             flash("Genre deleted successfully!!")
             return redirect(url_for('bookGenres'))
         else:
-            return render_template('deleteGenre.html', genre = genre, login_session = login_session)
+            return render_template('deleteGenre.html', genre = genre,
+                                                 login_session = login_session)
 
 @app.route('/genre/books/<int:genre_id>')
 def displayBooks(genre_id):
@@ -279,11 +304,36 @@ def displayBooks(genre_id):
     error = ''
     if not books:
         error = "Currently no books are avaialble in this genre"
-    #book_image = send_from_directory(app.config['UPLOAD_FOLDER'],filename)
+
     if 'username' not in login_session:
-        return render_template('publicgenreBooks.html', books = books, error = error, genre = genre, login_session = login_session)
+        return render_template('publicgenreBooks.html', books = books,
+                                                        error = error,
+                                                        genre = genre,
+                                                login_session = login_session)
     else:
-        return render_template('genreBooks.html', books = books, error = error, genre = genre, login_session = login_session)
+        return render_template('genreBooks.html', books = books,
+                                                  error = error,
+                                                  genre = genre,
+                                                login_session = login_session)
+
+@app.route('/book/<int:genre_id>/<int:book_id>')
+def oneBook(book_id, genre_id):
+    book = session.query(Book).filter_by(id = book_id).one()
+    error =''
+    if not book:
+        error = "This book is not available"
+    else:
+        if 'username' not in login_session:
+            return render_template('publicBook.html', book = book,
+                                                      error = error,
+                                                login_session = login_session)
+        else:
+            return render_template('book.html', book = book,
+                                               error = error,
+                                            login_session = login_session)
+
+
+
 @app.route('/genre/books/<int:genre_id>/add', methods =['GET','POST'])
 def addBook(genre_id):
     if 'username' not in login_session:
@@ -291,18 +341,28 @@ def addBook(genre_id):
     else:
         if request.method == 'POST':
             if request.form['name'] and request.form['price']:
-                newbook = Book(name = request.form['name'], description = request.form['description'], price = request.form['price'], genre_id = genre_id, user_id=login_session.get('user_id') )
+                newbook = Book(name = request.form['name'],
+                               description = request.form['description'],
+                               price = request.form['price'],
+                               genre_id = genre_id,
+                               user_id=login_session.get('user_id') )
                 file = request.files['picture']
                 if file and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
-                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+                    with Image.open(file) as image:
+                        image = resizeimage.resize_contain(image, [100, 150])
+
+                    image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                     newbook.picture = filename
                 session.add(newbook)
                 session.commit()
                 flash("New book added successfully!!")
                 return redirect(url_for('displayBooks', genre_id = genre_id))
         else:
-            return render_template('addBook.html', genre_id = genre_id, login_session = login_session)
+            return render_template('addBook.html', genre_id = genre_id,
+                                                   login_session = login_session)
+
 
 @app.route('/book/<int:genre_id>/<int:book_id>/edit', methods =['GET','POST'])
 def editBook(genre_id, book_id):
@@ -311,7 +371,9 @@ def editBook(genre_id, book_id):
         return redirect(url_for('showLogin'))
     else:
         if book.user_id != login_session.get('user_id'):
-            return "<script>function myFunction() {alert('You are not authorized to edit this book.');}</script><body onload='myFunction()''>"
+            flash("You don't have permissions to edit this book!!")
+            return redirect (url_for('displayBooks', genre_id = genre_id))
+
         if request.method == 'POST':
             book.name = request.form['name']
             book.description = request.form['description']
@@ -321,21 +383,29 @@ def editBook(genre_id, book_id):
             flash("Book updated successfully!!")
             return redirect (url_for('displayBooks', genre_id = genre_id))
         else:
-            return render_template('editBook.html', genre_id = genre_id, book = book, login_session = login_session)
+            return render_template('editBook.html', genre_id = genre_id,
+                                                     book = book,
+                                                login_session = login_session)
 
-@app.route('/book/<int:genre_id>/<int:book_id>/delete', methods =['GET','POST'])
+@app.route('/book/<int:genre_id>/<int:book_id>/delete',methods =['GET','POST'])
 def deleteBook(genre_id, book_id):
     book = session.query(Book).filter_by(id = book_id).one()
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
     else:
+        if book.user_id != login_session.get('user_id'):
+            flash("You don't have permissions to delete this book!!")
+            return redirect (url_for('displayBooks', genre_id = genre_id))
+
         if request.method == 'POST':
             session.delete(book)
             session.commit()
             flash("Book deleted successfully!!")
             return redirect(url_for('displayBooks', genre_id = genre_id))
         else:
-            return render_template('deleteBook.html', genre_id = genre_id, book= book, login_session = login_session)
+            return render_template('deleteBook.html', genre_id = genre_id,
+                                                book= book,
+                                                login_session = login_session)
 
 
 if __name__ == '__main__':

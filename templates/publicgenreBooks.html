@@ -7,6 +7,7 @@
 <div class="row">
     <div class="col-md-12 titles text-center">
         <h1 class="text-capitalize">{{genre.name}}</h1>
+        <hr>
     </div>
 </div>
 
@@ -26,7 +27,23 @@
 {% if not error %}
 
     {% for book in books %}
-        <div class="row">
+
+        <div class="row text-capitalize">
+
+            <div class="col-md-2">
+                <a href="{{url_for('oneBook', genre_id=book.genre_id, book_id = book['id'])}}"><img src="/static/images/{{book['picture']}}"></a>
+            </div>
+
+            <div class="col-md-10 text-left">
+                <h3>{{book['name']}}</h3>
+                <h4>${{book['price']}}</h4>
+            </div>
+
+        </div>
+
+        <hr>
+
+<!--         <div class="row">
             <div class="col-md-12">
                 {{book['name']}}
             </div>
@@ -42,7 +59,7 @@
             <div class="col-md-12">
                 {{book['price']}}
             </div>
-        </div>
+        </div> -->
 
     {% endfor %}
 

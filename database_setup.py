@@ -1,6 +1,6 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -39,6 +39,7 @@ class Book(Base):
     id = Column(Integer, primary_key = True)
     description = Column(String(250))
     price = Column(String(8))
+    added_on = Column(DateTime, default=func.now())
     picture = Column(String(250))
     genre_id = Column(Integer,ForeignKey('genre.id'))
     genre = relationship(Genre)
@@ -55,5 +56,5 @@ class Book(Base):
             'price': self.price,
         }
 
-engine = create_engine('sqlite:///bookscatalogtest1.db')
+engine = create_engine('sqlite:///bookscatalogtest2.db')
 Base.metadata.create_all(engine)

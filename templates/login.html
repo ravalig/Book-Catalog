@@ -20,7 +20,7 @@
 <!-- GOOGLE PLUS SIGN IN BUTTON-->
 
 
-        <div id="signInButton">
+        <div id="signInButton" >
           <span class="g-signin"
             data-scope="openid email"
             data-clientid="14268157237-bi7qrqbhv122efthfoohor4dvll2su4f.apps.googleusercontent.com"
@@ -56,7 +56,7 @@ function signInCallback(authResult) {
           $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
          setTimeout(function() {
           window.location.href = "/genres";
-         }, 4000);
+         }, 1000);
 
       } else if (authResult['error']) {
     console.log('There was an error: ' + authResult['error']);

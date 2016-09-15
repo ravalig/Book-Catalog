@@ -11,7 +11,7 @@ module.exports = function(grunt) {
             height: 150,
             overwrite: true,
             upscale: true,
-            // crop: true
+            crop: true
         },
       files: [{
         expand: true,

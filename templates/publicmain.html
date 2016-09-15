@@ -30,43 +30,61 @@
             <div class="col-md-9">
                 <div class="row book-images">
                     <div class="col-md-3">
-                        <img src="http://placekitten.com/150/200">
+                        {% if recent_books[0] %}
+                        <a href="{{url_for('oneBook', genre_id = recent_books[0]['genre_id'], book_id = recent_books[0]['id'])}}"><img src="/static/images/{{recent_books[0]['picture']}}"></a>
+                        {% endif %}
                     </div>
 
                     <div class="col-md-3">
-                        <img src="http://placekitten.com/150/200">
+                        {% if recent_books[1] %}
+                        <a href="{{url_for('oneBook', genre_id = recent_books[1]['genre_id'], book_id = recent_books[1]['id'])}}"><img src="/static/images/{{recent_books[1]['picture']}}"></a>
+                        {% endif %}
                     </div>
 
                     <div class="col-md-3">
-                        <img src="http://placekitten.com/150/200">
-                    </div>
-                </div>
-
-                <div class="row book-images">
-                    <div class="col-md-3">
-                        <img src="http://placekitten.com/150/200">
-                    </div>
-
-                    <div class="col-md-3">
-                        <img src="http://placekitten.com/150/200">
-                    </div>
-
-                    <div class="col-md-3">
-                        <img src="http://placekitten.com/150/200">
+                        {% if recent_books[2] %}
+                        <a href="{{url_for('oneBook', genre_id = recent_books[2]['genre_id'], book_id = recent_books[2]['id'])}}"><img src="/static/images/{{recent_books[2]['picture']}}"></a>
+                        {% endif %}
                     </div>
                 </div>
 
                 <div class="row book-images">
                     <div class="col-md-3">
-                        <img src="http://placekitten.com/150/200">
+                        {% if recent_books[3] %}
+                        <a href="{{url_for('oneBook', genre_id = recent_books[3]['genre_id'], book_id = recent_books[3]['id'])}}"><img src="/static/images/{{recent_books[3]['picture']}}"></a>
+                        {% endif %}
                     </div>
 
                     <div class="col-md-3">
-                        <img src="http://placekitten.com/150/200">
+                        {% if recent_books[4] %}
+                        <a href="{{url_for('oneBook', genre_id = recent_books[4]['genre_id'], book_id = recent_books[4]['id'])}}"><img src="/static/images/{{recent_books[4]['picture']}}"></a>
+                        {% endif %}
                     </div>
 
                     <div class="col-md-3">
-                        <img src="http://placekitten.com/150/200">
+                        {% if recent_books[5] %}
+                        <a href="{{url_for('oneBook', genre_id = recent_books[5]['genre_id'], book_id = recent_books[5]['id'])}}"><img src="/static/images/{{recent_books[5]['picture']}}"></a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row book-images">
+                    <div class="col-md-3">
+                        {% if recent_books[6] %}
+                        <a href="{{url_for('oneBook', genre_id = recent_books[6]['genre_id'], book_id = recent_books[6]['id'])}}"><img src="/static/images/{{recent_books[6]['picture']}}"></a>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-3">
+                        {% if recent_books[7] %}
+                        <a href="{{url_for('oneBook', genre_id = recent_books[7]['genre_id'], book_id = recent_books[7]['id'])}}"><img src="/static/images/{{recent_books[7]['picture']}}"></a>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-3">
+                        {% if recent_books[8] %}
+                        <a href="{{url_for('oneBook', genre_id = recent_books[8]['genre_id'], book_id = recent_books[8]['id'])}}"><img src="/static/images/{{recent_books[8]['picture']}}"></a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

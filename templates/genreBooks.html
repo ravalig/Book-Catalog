@@ -11,6 +11,7 @@
 <div class="row">
     <div class="col-md-12">
         <h4><a class="titles" href="{{url_for('addBook', genre_id = genre.id)}}">Add New Book</a></h4>
+        <hr>
     </div>
 </div>
 
@@ -31,26 +32,14 @@
 
     {% for book in books %}
         <div class="row text-capitalize">
-            <div class="col-md-12">
-                {{book['name']}}
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                {{book['description']}}
+            <div class="col-md-2">
+                <a href="{{url_for('oneBook', genre_id = book.genre_id, book_id = book['id'])}}"><img src="/static/images/{{book['picture']}}"></a>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                {{book['price']}}
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <img src="/static/images/{{book['picture']}}">
+            <div class="col-md-10 text-left ">
+                <h3 class="titles bold">{{book['name']}}</h3>
+                <h4>Price: ${{book['price']}}</h4>
             </div>
         </div>
 
@@ -58,6 +47,7 @@
                 <button class="form-buttons" formaction="{{url_for('editBook', book_id = book.id, genre_id = genre.id)}}">Edit</button>
                 <button class="form-buttons" formaction="{{url_for('deleteBook', book_id = book.id, genre_id = genre.id)}}">Delete</button>
         </form>
+        <hr>
     {% endfor %}
 
 {% else %}

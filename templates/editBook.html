@@ -21,7 +21,7 @@
                             Book Name
                         </td>
                         <td>
-                            <input class="text-font" type='text' name='name' value = {{book.name}}>
+                            <input class="text-font" type='text' name='name' value = "{{book.name}}">
                         </td>
                     </tr>
 
@@ -30,7 +30,7 @@
                             Description
                         </td>
                         <td>
-                            <input class="text-font" type='text' name='description' value = {{book.description}}>
+                            <input class="text-font" type='text' name='description' value = "{{book.description}}">
                         </td>
                     </tr>
 
@@ -40,6 +40,15 @@
                         </td>
                         <td>
                             <input class="text-font" type='text' name='price' value = {{book.price}}>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Picture
+                        </td>
+                        <td>
+                            <input class="text-font" type='file' name='picture' value={{book.picture}}>
                         </td>
                     </tr>
                 </table>
