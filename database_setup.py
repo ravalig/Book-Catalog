@@ -24,6 +24,7 @@ class Genre(Base):
     user_id = Column(Integer,ForeignKey('user.id'))
     user = relationship(User)
 
+
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
@@ -56,5 +57,5 @@ class Book(Base):
             'price': self.price,
         }
 
-engine = create_engine('sqlite:///bookscatalogtest2.db')
+engine = create_engine('postgres://aoopfejlrzadwu:dQSSIHcl-P1yTvGu6hHS8JOROU@ec2-54-221-229-37.compute-1.amazonaws.com:5432/d2li04h4kgqsn')
 Base.metadata.create_all(engine)
