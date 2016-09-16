@@ -19,7 +19,6 @@ from flask import make_response
 import requests
 
 import os
-import subprocess
 from werkzeug import secure_filename
 
 from PIL import Image
@@ -457,7 +456,7 @@ def editBook(genre_id, book_id):
 
 @app.route('/book/<int:genre_id>/<int:book_id>/delete',methods =['GET','POST'])
 def deleteBook(genre_id, book_id):
-        """
+    """
     This method handles the deleting of selected book.
     Only owner of the book would be able to delete the book.
     """
