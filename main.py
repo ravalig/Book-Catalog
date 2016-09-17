@@ -41,7 +41,6 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
-session.rollback()
 
 def allowed_file(filename):
     """
@@ -56,6 +55,7 @@ def createUser(login_session):
     Method to create a new user in to the database.
     If successful returns the user id of the user.
     """
+    session.rollback()
     newUser = User(name=login_session['username'], email=login_session[
                    'email'], picture=login_session['picture'])
     session.add(newUser)
