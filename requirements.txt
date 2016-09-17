@@ -9,7 +9,6 @@ gunicorn==19.6.0
 SQLAlchemy==1.0.15
 SQLAlchemy-ImageAttach==1.0.0
 twilio==6.3.dev0
-vboxapi==1.0
 virtualenv==15.0.3
 Wand==0.4.3
 Werkzeug==0.8.3
