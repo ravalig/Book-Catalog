@@ -13,7 +13,7 @@ class User(Base):
     name =Column(String(80), nullable = False)
     id = Column(Integer, primary_key = True)
     email = Column(String(250))
-    picture = Column(String(8))
+    picture = Column(String(400))
 
 
 class Genre(Base):

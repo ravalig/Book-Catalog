@@ -41,6 +41,7 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+session.rollback()
 
 def allowed_file(filename):
     """
