@@ -10,9 +10,6 @@ PyYAML==3.10
 SQLAlchemy==0.8.4
 SQLAlchemy-ImageAttach==1.0.0
 SecretStorage==2.0.0
-Twisted-Core==13.2.0
-Twisted-Names==13.2.0
-Twisted-Web==13.2.0
 Wand==0.4.3
 Werkzeug==0.9.4
 apt-xapian-index==0.45
