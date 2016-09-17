@@ -38,7 +38,7 @@ class Book(Base):
 
     name =Column(String(80), nullable = False)
     id = Column(Integer, primary_key = True)
-    description = Column(String(250))
+    description = Column(String(5000))
     price = Column(String(8))
     added_on = Column(DateTime, default=func.now())
     picture = Column(String(250))
