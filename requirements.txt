@@ -11,7 +11,7 @@ SQLAlchemy==0.8.4
 SQLAlchemy-ImageAttach==1.0.0
 SecretStorage==2.0.0
 Wand==0.4.3
-Werkzeug==0.9.4
+Werkzeug==0.15.3
 argparse==1.2.1
 bleach==1.4.3
 blinker==1.3
