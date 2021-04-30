@@ -43,7 +43,7 @@ pyserial==2.6
 python-resize-image==1.1.10
 redis==2.10.5
 requests==2.2.1
-rsa==3.4.2
+rsa==4.7
 simplejson==3.3.1
 six==1.10.0
 ssh-import-id==3.21
