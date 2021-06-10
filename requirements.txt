@@ -1,5 +1,5 @@
 Cheetah==2.4.4
-Django==1.10.1
+Django==2.2.24
 Flask==0.10.1
 Flask-HTTPAuth==3.1.2
 Jinja2==2.7.2
